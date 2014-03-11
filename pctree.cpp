@@ -3,8 +3,3 @@
 PCtree::PCtree(int** m) {
 
 }
-
-
-void PCtree::initializeTree() {
-   
-}

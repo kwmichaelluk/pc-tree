@@ -3,10 +3,10 @@
 
 #include <iostream>
 
-
 class PCtree{
     //Forward declare...
-    struct PCnode;
+    struct Pnode;
+    struct PCarc;
     
 public:
     //Constructor for 01 Matrix m stored as 2D array. Maybe write class for 01matrix if have time.
@@ -41,11 +41,37 @@ private:
     int frontier();
     
     //General Helper Methods
-    void transpose(PCnode* x);
+
+    
    
+    //Node Labelling
+    enum PClabel {EMPTY,PARTIAL,FULL};
+    
     //Structs
-    struct PCnode{
+    //Representing arc (x,y)
+    struct PCarc {
+        //Neighbours a and b
+        PCarc* a, *b;
         
+        //Twin Arcs
+        PCarc* twin;
+        
+        //Parent Label - for each twin arc, one is true, other is false
+        bool yParent;
+        
+        //If y is P node, point to it
+        Pnode* yPnode = NULL;
+    };
+    
+    //Representing P Node
+    struct Pnode {
+        //Point to one of its parent arcs, unless it's a root
+        PCarc* parentArc = NULL;
+    };
+    
+    //Representing leaf node
+    struct leafNode {
+        int colNum = -1;
     };
     
     
