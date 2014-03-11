@@ -48,6 +48,7 @@ private:
     enum PClabel {EMPTY,PARTIAL,FULL};
     
     //Structs
+    
     //Representing arc (x,y)
     struct PCarc {
         //Neighbours a and b
@@ -65,11 +66,11 @@ private:
     
     //Representing P Node
     struct Pnode {
-        //Point to one of its parent arcs, unless it's a root
+        //Point to one of its parent arcs, unless it's the root
         PCarc* parentArc = NULL;
     };
     
-    //Representing leaf node
+    //Representing leaf node?
     struct leafNode {
         int colNum = -1;
     };
