@@ -18,7 +18,8 @@ public:
 
     
 private:
-    //*********_Data_*********************************
+    //************************************************
+    //Data
     //************************************************
     //Number of Leaves
     int numLeaves;
@@ -26,6 +27,7 @@ private:
     //leaf Arcs initialized such that column 1 is leafArcs[0]
     PCarc* leafArcs;
     
+    //************************************************
     //Helper Methods
     //************************************************
     //Constructor will require the following to construct tree for main algorithm:
