@@ -72,6 +72,8 @@ private:
         
         //If y is P node, point to it
         Pnode* yPnode = NULL;
+        
+        PClabel label = EMPTY;
     };
     
     //Representing P Node

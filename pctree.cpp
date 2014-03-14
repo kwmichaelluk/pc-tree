@@ -1,6 +1,6 @@
 #include "pctree.h"
 
-void PCtree::PCtree(int** m) {
+PCtree::PCtree(int** m) {
 
 }
 
