@@ -18,10 +18,16 @@ public:
 
     
 private:
-    //Data
+    //*********_Data_*********************************
+    //************************************************
+    //Number of Leaves
     int numLeaves;
     
+    //leaf Arcs initialized such that column 1 is leafArcs[0]
+    PCarc* leafArcs;
+    
     //Helper Methods
+    //************************************************
     //Constructor will require the following to construct tree for main algorithm:
     void initializeTree();
     
@@ -47,7 +53,9 @@ private:
     //Node Labelling
     enum PClabel {EMPTY,PARTIAL,FULL};
     
+    //************************************************
     //Structs
+    //************************************************
     
     //Representing arc (x,y)
     struct PCarc {
@@ -68,11 +76,6 @@ private:
     struct Pnode {
         //Point to one of its parent arcs, unless it's the root
         PCarc* parentArc = NULL;
-    };
-    
-    //Representing leaf node?
-    struct leafNode {
-        int colNum = -1;
     };
     
     

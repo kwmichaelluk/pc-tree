@@ -4,7 +4,7 @@ void PCtree::PCtree(int** m) {
 
 }
 
-void PCtree:intializeTree(int** m) {
+void PCtree::intializeTree(int** m) {
 	Pnode parent;
 	PCarc *prev;
 	PCarc *initial;
