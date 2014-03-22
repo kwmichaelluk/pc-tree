@@ -85,10 +85,12 @@ void PCtree::labelTree() {
     
     PCarc* currArc = leafArcs[0];
     resetArcSet(currArc,marked);
+    
+    //std::cout << marked.size() << std::endl;
 }
 
 //Used in labelTree() for resetting all arcs
-void PCtree::resetArcSet(PCarc* arc, std::map<PCarc*,bool> marked) {
+void PCtree::resetArcSet(PCarc* arc, std::map<PCarc*,bool> &marked) {
     //If already marked, return;
     if(marked[arc]==true) return;
     

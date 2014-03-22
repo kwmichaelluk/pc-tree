@@ -53,7 +53,7 @@ private:
     void contractionStep();
     
     //Helper Methods for labelTree
-    void resetArcSet(PCarc* arc, std::map<PCarc*,bool> marked);
+    void resetArcSet(PCarc* arc, std::map<PCarc*,bool> &marked);
     
     //Helper Methods for getPermutations()
     int frontier();
