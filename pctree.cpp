@@ -85,8 +85,70 @@ void PCtree::labelTree() {
     
     PCarc* currArc = leafArcs[0];
     resetArcSet(currArc,marked);
-    
     //std::cout << marked.size() << std::endl;
+    
+    int i;
+    for(i=0;i<numLeaves;i++) {
+        if(M[this->currRow][i]==0) continue;
+        
+        setFullNode(leafArcs[i]);
+    }
+}
+
+void PCtree::setFullNode(PCarc *arc) {
+    if(arc->label == FULL) return;
+    
+    std::map<PCarc*,bool> marked;
+    
+    arc->label = FULL;
+    marked[arc] = true;
+    
+    //Increment Counter of Twin
+    incrementCounter(arc->twin);
+    
+    PCarc *currArc = arc->a;
+    if(currArc != arc) {
+        currArc->label = FULL;
+        marked[currArc] = true;
+        
+        incrementCounter(currArc->twin);
+        
+        if(marked[currArc->a]==false) {
+            currArc = currArc->a;
+        }
+        else {
+            currArc = currArc->b;
+        }
+    }
+}
+
+//Increment counter of a node(set of arcs)
+void PCtree::incrementCounter(PCarc *arc) {
+    std::map<PCarc*,bool> marked;
+    
+    arc->fullCounter++;
+    if(arc->fullCounter >= arc->degree-1) {
+        setFullNode(arc);
+        return;
+    }
+    
+    arc->label = PARTIAL;
+
+    marked[arc] = true;
+    
+    PCarc *currArc = arc->a;
+    if(currArc != arc) {
+        currArc->label = PARTIAL;
+        currArc->fullCounter++;
+        marked[currArc] = true;
+        
+        if(marked[currArc->a]==false) {
+            currArc = currArc->a;
+        }
+        else {
+            currArc = currArc->b;
+        }
+    }
 }
 
 //Used in labelTree() for resetting all arcs

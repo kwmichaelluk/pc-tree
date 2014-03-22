@@ -54,6 +54,8 @@ private:
     
     //Helper Methods for labelTree
     void resetArcSet(PCarc* arc, std::map<PCarc*,bool> &marked);
+    void setFullNode(PCarc* arc);
+    void incrementCounter(PCarc* arc);
     
     //Helper Methods for getPermutations()
     int frontier();
