@@ -24,6 +24,7 @@ int main() {
     
     
     PCtree myTree(sample,rows,cols);
+
     
     return 0;
 }

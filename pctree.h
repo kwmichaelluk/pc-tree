@@ -2,6 +2,7 @@
 #define __project445__pctree__
 
 #include <iostream>
+#include <map>
 
 class PCtree{
     //Forward declare...
@@ -24,11 +25,14 @@ private:
     //01-Matrix Copy
     int** M;
     
+    //Current Row
+    int currRow;
+    
     //Number of Leaves
     int numLeaves;
     
     //leaf Arcs initialized such that column 1 is leafArcs[0]
-    PCarc* leafArcs;
+    PCarc** leafArcs;
     
     //************************************************
     //Helper Methods
@@ -47,6 +51,9 @@ private:
     void deleteReplace();
     
     void contractionStep();
+    
+    //Helper Methods for labelTree
+    void resetArcSet(PCarc* arc, std::map<PCarc*,bool> marked);
     
     //Helper Methods for getPermutations()
     int frontier();
@@ -76,7 +83,10 @@ private:
         //If y is P node, point to it
         Pnode* yPnode = NULL;
         
+        //Needed for Labelling Stage
         PClabel label = EMPTY;
+        int degree;
+        int fullCounter;
     };
     
     //Representing P Node
