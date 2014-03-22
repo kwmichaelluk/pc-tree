@@ -1,7 +1,18 @@
 #include "pctree.h"
 
-PCtree::PCtree(int** m) {
-
+PCtree::PCtree(int** m, int row, int col) {
+    this->numLeaves = col;
+    
+    //Copy 01 Matrix
+    int i,j;
+    for(i=0;i<row;i++) {
+        for(j=0;j<col;j++) {
+            this->M[i][j] = m[i][j];
+        }
+    }
+    
+    //
+    initializeTree();
 }
 
 void PCtree::initializeTree() {

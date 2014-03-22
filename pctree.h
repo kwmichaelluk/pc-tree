@@ -10,7 +10,7 @@ class PCtree{
     
 public:
     //Constructor for 01 Matrix m stored as 2D array. Maybe write class for 01matrix if have time.
-    PCtree(int** m);
+    PCtree(int** m, int row, int col);
     
     //Methods for a constructed PC tree
     //Get all permutations of PC tree
@@ -21,6 +21,9 @@ private:
     //************************************************
     //Data
     //************************************************
+    //01-Matrix Copy
+    int** M;
+    
     //Number of Leaves
     int numLeaves;
     

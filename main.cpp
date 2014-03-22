@@ -22,6 +22,9 @@ int main() {
     sample[3][3]=1; sample[3][4]=1; sample[3][5]=1;
     sample[4][0]=1; sample[4][4]=1; sample[4][5]=1;
     
+    
+    PCtree myTree(sample,rows,cols);
+    
     return 0;
 }
 
