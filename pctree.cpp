@@ -21,7 +21,7 @@ PCtree::PCtree(int** m, int row, int col) {
     initializeTree();
     
     //For Each Row
-    for(i=0;i<row;i++) {
+    for(i=0;i<1;i++) {
         //Set Current Row
         this->currRow = i;
         
@@ -93,6 +93,23 @@ void PCtree::labelTree() {
         
         setFullNode(leafArcs[i]);
     }
+    
+    /* Test
+    for(i=0;i<numLeaves;i++) {
+        PClabel ll = leafArcs[i]->label;
+        if( ll == EMPTY ) {
+            std::cout << "EMPTY" << std::endl;
+        }
+        else if( ll == PARTIAL ) {
+            std::cout << "PARTIAL" << std::endl;
+        }
+        else if( ll == FULL ) {
+            std::cout << "FULL" << std::endl;
+        }
+        else {
+            std::cout << "ERRRROR" << std::endl;
+        }
+    } */
 }
 
 void PCtree::setFullNode(PCarc *arc) {
@@ -107,7 +124,7 @@ void PCtree::setFullNode(PCarc *arc) {
     incrementCounter(arc->twin);
     
     PCarc *currArc = arc->a;
-    if(currArc != arc) {
+    while(currArc != arc) {
         currArc->label = FULL;
         marked[currArc] = true;
         
@@ -137,12 +154,12 @@ void PCtree::incrementCounter(PCarc *arc) {
     marked[arc] = true;
     
     PCarc *currArc = arc->a;
-    if(currArc != arc) {
+    while(currArc != arc) {
         currArc->label = PARTIAL;
         currArc->fullCounter++;
         marked[currArc] = true;
         
-        if(marked[currArc->a]==false) {
+        if(marked[currArc->a]!=true) {
             currArc = currArc->a;
         }
         else {
