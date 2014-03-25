@@ -25,6 +25,7 @@ PCtree::PCtree(int** m, int row, int col) {
         //Set Current Row
         this->currRow = i;
         
+        partialArcs.clear();
         //Reset All Arcs/Nodes
         labelTree();
     }
@@ -149,9 +150,13 @@ void PCtree::incrementCounter(PCarc *arc) {
         return;
     }
     
+    //Set Partial Node
     arc->label = PARTIAL;
 
     marked[arc] = true;
+    
+    //Store Partial Arc
+    storePartialArc(arc);
     
     PCarc *currArc = arc->a;
     while(currArc != arc) {
@@ -166,6 +171,10 @@ void PCtree::incrementCounter(PCarc *arc) {
             currArc = currArc->b;
         }
     }
+}
+
+void PCtree::storePartialArc(PCarc *arc) {
+    partialArcs.push_back(arc);
 }
 
 //Used in labelTree() for resetting all arcs
@@ -186,4 +195,116 @@ void PCtree::resetArcSet(PCarc* arc, std::map<PCarc*,bool> &marked) {
     
     resetArcSet(arc->a, marked);
     resetArcSet(arc->b, marked);
+}
+
+void PCtree::getTerminalPath() {
+    std::vector<PCarc*> terminalPath;
+    
+    //Foreach Partial Arc...
+    if(partialArcs.size()==1) {
+        
+    }
+    else {
+        std::map<PCarc*,bool> marked;
+        PCarc *currArc;
+        //Initialize - Mark all Partial Node Arcs
+        for(PCarc* arc : partialArcs) {
+            marked[arc] = true;
+            
+            //Add To Terminal Path
+            terminalPath.push_back(arc);
+            
+            currArc = arc->a;
+            while(currArc != arc) {
+                marked[currArc] = true;
+                
+                if(marked[currArc->a]!=true) currArc = currArc->a;
+                else currArc = currArc->b;
+            }
+        }
+        
+        //Find Potential Apex Position
+        std::vector<PCarc*> potentialApex;
+        for(PCarc* arc: partialArcs) {
+            //Find Parent
+            PCarc* p = getParent(arc);
+            
+            //Add To Terminal Path
+            terminalPath.push_back(p);
+            
+            //Check and Mark Parent Arcs
+            if(marked[p]) {
+                //FOUND COLLISION
+                //STORE POTENTIAL APEX
+                potentialApex.push_back(p);
+                
+                //POP ARC
+                partialArcs.erase(partialArcs.begin());
+                
+                //CONTINUE
+                continue;
+            }
+            else {
+                //Mark all arcs around the parent node
+                marked[p] = true;
+                
+                currArc = p->a;
+                while(currArc != p) {
+                    marked[currArc] = true;
+                    
+                    if(marked[currArc->a]!=true) currArc = currArc->a;
+                    else currArc = currArc->b;
+                }
+                
+                //POP ARC
+                partialArcs.erase(partialArcs.begin());
+                
+                //ADD PARENT ARC
+                partialArcs.push_back(p);
+            }
+        }
+        
+        //determine Highest Point from potentialApex / (or terminalPath)
+        
+        //Get Apex, while storing all between highest point and apex
+        
+        //Remove those from terminal path
+        
+        //Terminal path is now our final terminal path
+        
+    }
+}
+
+PCtree::PCarc* PCtree::getParent(PCarc* arc) {
+    PCarc* parent;
+    
+    if(arc->yPnode != NULL && arc->yPnode->parentArc != NULL) {
+        parent = arc->yPnode->parentArc;
+    }
+    else {
+        std::map<PCarc*,bool> marked;
+        
+        PCarc* currArc = arc;
+        while(true) {
+            if(currArc->twin->yParent) {
+                parent = currArc->twin;
+                break;
+            }
+            else {
+                marked[currArc] = true;
+                
+                currArc = marked[currArc->a]? currArc->b : currArc->a;
+            }
+            
+            //IF NO PARENT...
+            if(marked[currArc]) {
+                std::cout << "ERROR getParent() NO PARENT" << std::endl;
+                
+                parent = NULL;
+                break;
+            }
+        }
+    }
+    
+    return parent;
 }

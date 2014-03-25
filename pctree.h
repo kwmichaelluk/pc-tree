@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <map>
+#include <vector>
 
 class PCtree{
     //Forward declare...
@@ -34,6 +35,9 @@ private:
     //leaf Arcs initialized such that column 1 is leafArcs[0]
     PCarc** leafArcs;
     
+    //Store all PARTIAL arcs (nodes)
+    std::vector<PCarc*> partialArcs;
+    
     //************************************************
     //Helper Methods
     //************************************************
@@ -56,12 +60,13 @@ private:
     void resetArcSet(PCarc* arc, std::map<PCarc*,bool> &marked);
     void setFullNode(PCarc* arc);
     void incrementCounter(PCarc* arc);
+    void storePartialArc(PCarc* arc);
     
     //Helper Methods for getPermutations()
     int frontier();
     
     //General Helper Methods
-
+    PCarc* getParent(PCarc* arc);
     
    
     //Node Labelling
