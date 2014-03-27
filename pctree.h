@@ -38,6 +38,9 @@ private:
     //Store all PARTIAL arcs (nodes)
     std::vector<PCarc*> partialArcs;
     
+    //Terminal Path
+    std::vector<PCarc*> terminalPath;
+    
     //************************************************
     //Helper Methods
     //************************************************
@@ -61,6 +64,11 @@ private:
     void setFullNode(PCarc* arc);
     void incrementCounter(PCarc* arc);
     void storePartialArc(PCarc* arc);
+    
+    //Helper Method for getTerminalPath
+    void terminalPathClean();
+    bool isHigherArc(PCarc* a, PCarc* b);
+    bool isSameNode(PCarc* a, PCarc* b);
     
     //Helper Methods for getPermutations()
     int frontier();

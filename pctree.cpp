@@ -28,6 +28,9 @@ PCtree::PCtree(int** m, int row, int col) {
         partialArcs.clear();
         //Reset All Arcs/Nodes
         labelTree();
+        
+        //get terminal path
+        getTerminalPath();
     }
 }
 
@@ -174,6 +177,23 @@ void PCtree::incrementCounter(PCarc *arc) {
 }
 
 void PCtree::storePartialArc(PCarc *arc) {
+    //Store arc only if arcs of the same node is not already stored
+    std::map<PCarc*,bool> marked;
+    PCarc* currArc;
+    for(PCarc* a : partialArcs) {
+        marked.clear();
+        currArc = a;
+        
+        while(!marked[currArc]) {
+            marked[currArc] = true;
+            if( currArc == arc ) {
+                return;
+            }
+            
+            currArc = marked[currArc->a] ? currArc->b : currArc->a ;
+        }
+    }
+    
     partialArcs.push_back(arc);
 }
 
@@ -198,11 +218,13 @@ void PCtree::resetArcSet(PCarc* arc, std::map<PCarc*,bool> &marked) {
 }
 
 void PCtree::getTerminalPath() {
-    std::vector<PCarc*> terminalPath;
+    terminalPath.clear();
     
     //Foreach Partial Arc...
     if(partialArcs.size()==1) {
+        std::cout << "Only 1 Partial Node" << std::endl;
         
+        terminalPath.push_back(partialArcs[0]);
     }
     else {
         std::map<PCarc*,bool> marked;
@@ -223,7 +245,7 @@ void PCtree::getTerminalPath() {
             }
         }
         
-        //Find Potential Apex Position
+        //Find Potential Apex Position/Terminal Path nodes
         std::vector<PCarc*> potentialApex;
         for(PCarc* arc: partialArcs) {
             //Find Parent
@@ -243,6 +265,8 @@ void PCtree::getTerminalPath() {
                 
                 //CONTINUE
                 continue;
+                
+                //...or cheat. End here, and say this is apex
             }
             else {
                 //Mark all arcs around the parent node
@@ -264,17 +288,129 @@ void PCtree::getTerminalPath() {
             }
         }
         
-        //determine Highest Point from potentialApex / (or terminalPath)
+        terminalPathClean();
         
-        //Get Apex, while storing all between highest point and apex
-        
-        //Remove those from terminal path
-        
-        //Terminal path is now our final terminal path
         
     }
 }
 
+//Used in Find Terminal Path to remove nodes above apex
+void PCtree::terminalPathClean() {
+    std::map<PCarc*,bool> marked;
+    PCarc *currArc;
+    
+    //determine Highest Point
+    PCarc* highestArc = NULL;
+    bool tt;
+    int i, highestNum;
+    PCarc* k;
+    
+    for(i=0;i<terminalPath.size();i++) {
+        
+        k = terminalPath[i];
+        tt = true;
+        for( PCarc* q : terminalPath ) {
+            //Ignore same arc
+            if(q==k) continue;
+            
+            if(!isHigherArc(k, q)) {
+                tt = false;
+                break;
+            }
+        }
+        
+        if(tt) {
+            highestArc = k;
+            highestNum = i;
+            break;
+        }
+    }
+    
+    //Get Apex, while storing all between highest point and apex
+    //Check if childs are PARTIAL, or if two of childs are from terminal path
+    bool isApex = false;
+    marked.clear();
+    currArc = highestArc;
+    
+    while(!marked[currArc]) {
+        if(currArc->twin->label == PARTIAL) {
+            isApex = true;
+            break;
+        }
+        
+        marked[currArc] = true;
+        currArc = marked[currArc->a]?currArc->b:currArc->a;
+    }
+    
+    //If no childs are partial, check if two paths entering are from terminal path
+    marked.clear();
+    currArc = highestArc;
+    if(!isApex) {
+        int numEntering = 0;
+        
+        while(!marked[currArc]) {
+            
+            for(PCarc* q : terminalPath) {
+                if(q==highestArc) continue;
+                
+                if(isSameNode(currArc->twin,q)) {
+                    numEntering++;
+                    break;
+                }
+            }
+            
+            if(numEntering>=2) {
+                isApex = true;
+                break;
+            }
+            
+            marked[currArc] = true;
+            currArc = marked[currArc->a]?currArc->b:currArc->a;
+        }
+    }
+    
+    //If apex is found, then DONE!
+    if(isApex) {
+        return;
+    }
+    else {
+        //Remove Highest point and REPEAT.
+        terminalPath.erase(terminalPath.begin()+highestNum);
+        terminalPathClean();
+    }
+}
+
+//Used in Find Terminal Path ONLY. Returns true IFF a is higher than b in terminal path.
+bool PCtree::isHigherArc(PCtree::PCarc *a, PCtree::PCarc *b) {
+    PCarc* p = getParent(b);
+    while(p != NULL) {
+        
+        if( isSameNode(a,p) ) {
+            return true;
+        }
+        
+        p = getParent(p);
+    }
+    
+    return false;
+}
+
+//returns true IFF arc a and b are pointing towards same node
+bool PCtree::isSameNode(PCtree::PCarc *a, PCtree::PCarc *b) {
+    std::map<PCarc*,bool> marked;
+    PCarc* currArc = a;
+
+    while(!marked[currArc]) {
+        marked[currArc] = true;
+        
+        if(currArc == b) return true;
+        
+        currArc = marked[currArc->a] ? currArc->b : currArc->a ;
+    }
+    return false;
+}
+
+//Returns an arc whose node is parent of input arc's node
 PCtree::PCarc* PCtree::getParent(PCarc* arc) {
     PCarc* parent;
     
