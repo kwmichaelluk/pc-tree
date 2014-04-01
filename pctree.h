@@ -4,6 +4,7 @@
 #include <iostream>
 #include <map>
 #include <vector>
+#include <assert.h>
 
 class PCtree{
     //Forward declare...
@@ -41,6 +42,9 @@ private:
     //Terminal Path
     std::vector<PCarc*> terminalPath;
     
+    //Used in ContractionStep
+    PCarc* newCnode = NULL;
+    
     //************************************************
     //Helper Methods
     //************************************************
@@ -51,11 +55,11 @@ private:
     
     void getTerminalPath();
     
-    void separateFullEmpty();
+//    void separateFullEmpty();
     
     void splitTree();
     
-    void deleteReplace();
+//    void deleteReplace();
     
     void contractionStep();
     
@@ -69,6 +73,19 @@ private:
     void terminalPathClean();
     bool isHigherArc(PCarc* a, PCarc* b);
     bool isSameNode(PCarc* a, PCarc* b);
+    
+    //Helper Method for splitTree
+    void sortTerminalPath();
+    void setDegree(PCarc* node);
+    void setNewPnode(PCarc* node);
+    
+    //Helper Method for contractionStep
+    void contractEdge(PCarc* edge);
+    
+    //
+    bool isAdjacent(PCarc* nodeA, PCarc* nodeB);
+    void removeEdge(PCarc* arc);
+    void removeEdge(PCarc* nodeA, PCarc* nodeB);
     
     //Helper Methods for getPermutations()
     int frontier();
