@@ -45,6 +45,9 @@ private:
     //Used in ContractionStep
     PCarc* newCnode = NULL;
     
+    //
+    PCarc* rootArc = NULL;
+    
     //************************************************
     //Helper Methods
     //************************************************

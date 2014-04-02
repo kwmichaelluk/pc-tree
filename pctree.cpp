@@ -437,6 +437,7 @@ void PCtree::splitTree() {
     
     //Set Degree of center C node
     newCnode = initC;
+    rootArc = newCnode;
     setDegree(newCnode);
 
     assert(newCnode->degree == terminalChild.size()*2);
@@ -815,6 +816,10 @@ void PCtree::initializeTree() {
         }
         
         prev = a;
+        
+        if(i==0) {
+            rootArc = a;
+        }
 	}
 }
 
