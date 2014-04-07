@@ -17,7 +17,7 @@ public:
     
     //Methods for a constructed PC tree
     //Get all permutations of PC tree
-    int* getPermutations();
+    int* getPermutations(FILE* output);
 
     
 private:
@@ -100,6 +100,13 @@ private:
     //Node Labelling
     enum PClabel {EMPTY,PARTIAL,FULL};
     
+	//Visualization methods
+	void printNode(PCarc* arc,FILE* output);
+	
+
+
+
+
     //************************************************
     //Structs
     //************************************************

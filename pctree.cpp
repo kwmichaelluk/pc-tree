@@ -40,6 +40,55 @@ PCtree::PCtree(int** m, int row, int col) {
     }
 }
 
+int* PCtree::getPermutations(FILE* output) {
+	PCarc* startArc = rootArc;	
+	PCarc* currArc = startArc;
+	std::map<PCarc*,bool> marked;
+	std::map<PCarc*,bool> node;
+	int i;
+	
+	std::cout<<"Level One \n";
+	printNode(startArc,output);
+	
+	fprintf(output,"\\node{}\n");
+
+
+	//std::cout<<"Level Two \n";
+	while(!marked[currArc]){
+		marked[currArc] = true;
+		fprintf(output,"\tchild{%d}\n",numLeaves-i);
+
+		//printNode(currArc->twin,output);		
+		currArc = marked[currArc->a] ? currArc->b : currArc->a;
+	}
+	marked.clear();
+	
+	std::cout<<"Leaves\n";
+	for(i=0;i<numLeaves;i++){
+			std::cout<<"\n"<<i+1 <<"\t"<<leafArcs[i];
+	}
+	std::cout<<std::endl;
+	
+		
+}
+
+void PCtree::printNode(PCarc* arc,FILE* output){
+	PCarc* currArc = arc;
+	std::map<PCarc*,bool> marked;
+	
+	while(!marked[currArc]){		
+		marked[currArc] = true;
+
+		std::cout  << "\n\t" << currArc << " "<< currArc->yParent
+		<<  "\t\t\t" << currArc->twin << " " << currArc->twin->yParent << 
+		"\n" << currArc->a << "\t" << currArc->b << "\t" 
+		<< currArc->twin->a << "\t" << currArc->twin->b <<"\n";
+		//std::cout<<currArc->yPnode<<"\t"<<currArc->yPnode->parentArc<<"\n\n";			
+		currArc = currArc->b;			
+	}	
+	std::cout<<"\n\n\n";
+}
+
 //Contract all Cnode neighbours and nodes with only two neighbours (degree)
 void PCtree::contractionStep() {
     std::map<PCarc*,bool> marked;
